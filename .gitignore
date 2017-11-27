@@ -1,0 +1,10 @@
+broken
+Netcat-tcp
+*.bak
+*.bac
+*.tmp
+*.del
+*.swp
+*.log
+*.pyc
+
