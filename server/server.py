@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import socket
 import sys
-
+import time
 
 def socketThread():
     print("setting socket and host info : ")
@@ -62,7 +62,6 @@ def sendData():
                 conn.send("Your connected to the simple server :" )
 
             elif 'file' in data:
-                #conn.sendall(data)
 
                 return fileTransfer(data)
 
@@ -84,7 +83,8 @@ def fileTransfer(data):
         dataFile = fd.read()
         print dataFile
         conn.send(dataFile)
-        return sendData()
+        return
+
 
     else:
         print "exiting"
@@ -95,6 +95,7 @@ def fileTransfer(data):
         conn.close()
 
         return socketThread()
+
 
 while (1):
     if __name__ == '__main__':
