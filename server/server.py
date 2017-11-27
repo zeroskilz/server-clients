@@ -2,11 +2,12 @@
 import socket
 import sys
 
-def socket_thread():
+
+def socketThread():
     print("setting socket and host info : ")
 # script arguments
 
-    if len(sys.argv)>=2:
+    if len(sys.argv)>2:
         port = str(sys.argv[2])
         host = str(sys.argv[1])
 
@@ -16,9 +17,12 @@ def socket_thread():
         or:    python server.py host port
 
         open up a socket and stream data over tcp sockets
+        defaulting to 0.0.0.0 and port 4201
         '''
         print usage
-        exit()
+
+        host = '0.0.0.0'
+        port = 4201
 
 
     if host != '' :
@@ -38,7 +42,7 @@ def socket_thread():
     soc.listen(1)
     global conn
     conn, addr = soc.accept()
-    print( conn.recv(4096))
+
     conn.send('You are connected to Host : %s running on port %s : ' %(str(host), str(port)))
 
 def sendData():
@@ -51,33 +55,53 @@ def sendData():
 
             if not data:
                 print socket.errno
-                return main()
+                return socketThread()
 
-            elif data != 'file':
+            elif 'file' not in data:
                 conn.send ("you sent the string %s :" %(data))
-                conn.send("Your connected to the simple server : \n" )
+                conn.send("Your connected to the simple server :" )
 
-            elif file in command:
-                data = data.strip('file :')
-                conn.sendall(data)
-                return data
+            elif 'file' in data:
+                #conn.sendall(data)
+
+                return fileTransfer(data)
 
         except socket.error as msg:
             conn.close()
 
 def fileTransfer(data):
+
     print data
-    sendFile = str(data)
+
+    sendFile = (data)
+    sendFile = sendFile.strip("file ")
+    sendFile = sendFile.strip('\n')
+    print data
     fd = open(sendFile, 'r')
-    data = fd.read()
-    conn.sendall(data)
-    return main
 
-main()
-if conn:
+    if(fd):
 
-    sendData()
-else:
-    print socket.errno
+        dataFile = fd.read()
+        print dataFile
+        conn.send(dataFile)
+        return sendData()
+
+    else:
+        print "exiting"
+        return socketThread()
+
+
+        print("exiting")
+        conn.close()
+
+        return socketThread()
+
+while (1):
+    if __name__ == '__main__':
+        socketThread()
+    if conn:
+        sendData()
+    else:
+        print socket.errno
 
 
