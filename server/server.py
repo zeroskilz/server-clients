@@ -3,6 +3,7 @@ import socket
 import sys
 import time
 
+
 def socketThread():
     print("setting socket and host info : ")
 # script arguments
@@ -40,14 +41,14 @@ def socketThread():
 
     soc.bind((host, int(port)))
     soc.listen(1)
-    global conn
     conn, addr = soc.accept()
 
     conn.send('You are connected to Host : %s running on port %s : ' %(str(host), str(port)))
+    global conn
 
-def sendData():
+    return sendData(conn)
+def sendData(conn):
     while True:
-
 
         try:
             data = conn.recv(4096)
@@ -55,18 +56,26 @@ def sendData():
 
             if not data:
                 print socket.errno
-                return socketThread()
+                return
 
             elif 'file' not in data:
+
                 conn.send ("you sent the string %s :" %(data))
                 conn.send("Your connected to the simple server :" )
+
+
 
             elif 'file' in data:
 
                 return fileTransfer(data)
 
         except socket.error as msg:
-            conn.close()
+                print msg
+
+
+
+
+
 
 def fileTransfer(data):
 
@@ -76,33 +85,32 @@ def fileTransfer(data):
     sendFile = sendFile.strip("file ")
     sendFile = sendFile.strip('\n')
     print data
-    fd = open(sendFile, 'r')
-
-    if(fd):
-
-        dataFile = fd.read()
-        print dataFile
-        conn.send(dataFile)
-        return
-
-
-    else:
-        print "exiting"
-        return socketThread()
+    with open(sendFile, 'r') as fd:
+        if(fd):
+            dataFile = fd.read()
+            print dataFile
+            conn.send(dataFile)
+            pass
+            return
 
 
-        print("exiting")
-        conn.close()
+        else:
+            print "exiting"
+            return socketThread()
 
-        return socketThread()
+
+            print("exiting")
+            conn.close()
+
+            return socketThread()
 
 
 while (1):
     if __name__ == '__main__':
         socketThread()
-    if conn:
-        sendData()
-    else:
-        print socket.errno
+    #if conn:
+      #  sendData()
+    #else:
+     #   print socket.errno
 
 
