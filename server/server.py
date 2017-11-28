@@ -79,30 +79,31 @@ def sendData(conn):
 
 def fileTransfer(data):
 
-    print data
-
-    sendFile = (data)
-    sendFile = sendFile.strip("file ")
-    sendFile = sendFile.strip('\n')
-    pathexist = os.path.isfile(sendFile)
-    if(pathexist):
         print data
-        with open(sendFile, 'r') as fd:
-            if(fd):
-                dataFile = fd.read()
-                print dataFile
-                conn.send(dataFile)
-                pass
-                return
 
-            else:
-                print "exiting"
-                return
+        sendFile = (data)
+        sendFile = sendFile.strip("file ")
+        sendFile = sendFile.strip('\n')
+        pathexist = os.path.isfile(sendFile)
+        print data
+        if pathexist == False:
+            conn.send("no file by that name")
+            return socketThread()
+        else:
 
-    else:
-        print "exiting"
-        return
+            with open(sendFile, 'r') as fd:
+                if(fd):
+                    print "sending data"
+                    dataFile = fd.read()
+                    print dataFile
+                    conn.send(dataFile)
+                    print "sending file complete"
+                    pass
+                    return
 
+                else:
+                    print "exiting"
+                    return
 
 
 
