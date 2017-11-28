@@ -2,7 +2,7 @@
 import socket
 import sys
 import time
-
+import os
 
 def socketThread():
     print("setting socket and host info : ")
@@ -84,25 +84,27 @@ def fileTransfer(data):
     sendFile = (data)
     sendFile = sendFile.strip("file ")
     sendFile = sendFile.strip('\n')
-    print data
-    with open(sendFile, 'r') as fd:
-        if(fd):
-            dataFile = fd.read()
-            print dataFile
-            conn.send(dataFile)
-            pass
-            return
+    pathexist = os.path.isfile(sendFile)
+    if(pathexist):
+        print data
+        with open(sendFile, 'r') as fd:
+            if(fd):
+                dataFile = fd.read()
+                print dataFile
+                conn.send(dataFile)
+                pass
+                return
+
+            else:
+                print "exiting"
+                return
+
+    else:
+        print "exiting"
+        return
 
 
-        else:
-            print "exiting"
-            return socketThread()
 
-
-            print("exiting")
-            conn.close()
-
-            return socketThread()
 
 
 while (1):
